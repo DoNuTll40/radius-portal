@@ -21,11 +21,15 @@ export default function LoginPage() {
     if (magicParam) setMagic(magicParam);
   }, []);
 
+  
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-
+    
+    console.log(postUrl)
+    console.log(magic)
+    console.log(username)
     try {
       const res = await fetch("http://10.10.10.3:2545/api/login", {
         method: "POST",
