@@ -3,33 +3,29 @@
 import { useState, useRef, useEffect } from "react";
 
 export default function LoginPage() {
-  const [postUrl, setPostUrl] = useState("http://192.168.106.1:1000/fgtauth");
-  const [magic, setMagic] = useState("");
+  const [postUrl, setPostUrl] = useState(""); // URL ที่จะ POST กลับไปหา FortiGate พร้อม magic
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const formRef = useRef(null);
 
-  // ดึงค่าจาก URL เช่น ?post=...&magic=...
+  // ดึงค่า magic จาก URL แล้วประกอบ URL สำหรับส่งกลับ FortiGate
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const post = params.get("post");
     const magicParam = params.get("magic");
 
-    if (post) setPostUrl(post);
-    if (magicParam) setMagic(magicParam);
+    if (magicParam) {
+      // FortiGate ต้องการให้ magic อยู่ใน URL, ไม่ใช่ใน form field
+      setPostUrl(`http://192.168.106.1:1000/fgtauth?${magicParam}`);
+    }
   }, []);
 
-  
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    
-    console.log(postUrl)
-    console.log(magic)
-    console.log(username)
+
     try {
       const res = await fetch("http://10.10.10.3:2545/api/login", {
         method: "POST",
@@ -57,6 +53,7 @@ export default function LoginPage() {
     <div className="p-8 max-w-md mx-auto bg-white rounded shadow">
       <h1 className="text-2xl font-bold mb-4 text-center">Login Network</h1>
 
+      {/* ฟอร์มสำหรับกรอก username/password */}
       <form onSubmit={handleLogin}>
         <input
           className="w-full p-2 border rounded mb-3"
@@ -88,9 +85,13 @@ export default function LoginPage() {
 
       {error && <p className="text-red-600 mt-3 text-center">{error}</p>}
 
-      {/* ฟอร์มลับไว้ส่งกลับไป FortiGate */}
-      <form ref={formRef} method="POST" action={postUrl} target="_blank">
-        <input type="hidden" name="magic" value={magic} />
+      {/* ฟอร์มลับสำหรับส่ง POST ไปหา FortiGate พร้อม magic */}
+      <form
+        ref={formRef}
+        method="POST"
+        action={postUrl}
+        target="_blank" // แนะนำให้เปิดแท็บใหม่เพื่อตรวจสอบผลการตอบกลับ
+      >
         <input type="hidden" name="username" value={username} />
       </form>
     </div>
