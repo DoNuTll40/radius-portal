@@ -17,7 +17,8 @@ export default function LoginPage() {
     setMagic(params.get('magic') || '')
   }, [])
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
     setLoading(true)
     setError('')
 
@@ -59,7 +60,7 @@ export default function LoginPage() {
       />
 
       <button
-        onClick={handleLogin}
+        onClick={() => handleLogin() }
         className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
         disabled={loading}
       >
