@@ -1,18 +1,21 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useState, useRef, useEffect } from 'react'
 
 export default function LoginPage() {
-  const searchParams = useSearchParams()
-
-  const postUrl = searchParams.get('post') || 'http://192.168.106.1:1000/fgtauth'
-  const magic = searchParams.get('magic') || ''
+  const [postUrl, setPostUrl] = useState('http://192.168.106.1:1000/fgtauth')
+  const [magic, setMagic] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const formRef = useRef(null)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    setPostUrl(params.get('post') || 'http://192.168.106.1:1000/fgtauth')
+    setMagic(params.get('magic') || '')
+  }, [])
 
   const handleLogin = async () => {
     setLoading(true)
@@ -28,7 +31,6 @@ export default function LoginPage() {
     setLoading(false)
 
     if (data.success) {
-      // ส่ง POST กลับไปยัง FortiGate
       formRef.current?.submit()
     } else {
       setError('เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบข้อมูล')
@@ -66,7 +68,7 @@ export default function LoginPage() {
 
       {error && <p className="text-red-600 mt-3 text-center">{error}</p>}
 
-      {/* ฟอร์มที่ใช้ส่งกลับไปยัง FortiGate */}
+      {/* ส่งกลับ FortiGate */}
       <form ref={formRef} method="POST" action={postUrl}>
         <input type="hidden" name="magic" value={magic} />
         <input type="hidden" name="username" value={username} />
