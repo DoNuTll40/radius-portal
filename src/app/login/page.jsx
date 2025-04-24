@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "axios";
 import { useState, useRef, useEffect } from "react";
 
 export default function LoginPage() {
@@ -47,6 +48,46 @@ export default function LoginPage() {
       setLoading(false);
       setError("ไม่สามารถเชื่อมต่อระบบได้");
     }
+    const handleLogin = async (e) => {
+      e.preventDefault();
+      setLoading(true);
+      setError("");
+
+      try {
+        const res = await fetch("http://10.10.10.3:2545/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const data = await res.json();
+        setLoading(false);
+
+        if (data.success) {
+          console.log(
+            "✅ Login success. Sending to FortiGate via axios:",
+            postUrl
+          );
+
+          const formData = new URLSearchParams();
+          formData.append("username", username);
+
+          await axios.post(postUrl, formData, {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          });
+
+          console.log("✅ Magic POST complete. FortiGate should unlock.");
+        } else {
+          setError("เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบข้อมูล");
+        }
+      } catch (err) {
+        console.error("❌ Error:", err);
+        setLoading(false);
+        setError("ไม่สามารถเชื่อมต่อระบบได้");
+      }
+    };
   };
 
   return (
@@ -84,16 +125,6 @@ export default function LoginPage() {
       </form>
 
       {error && <p className="text-red-600 mt-3 text-center">{error}</p>}
-
-      {/* ฟอร์มลับสำหรับส่ง POST ไปหา FortiGate พร้อม magic */}
-      <form
-        ref={formRef}
-        method="POST"
-        action={postUrl}
-        target="_blank" // แนะนำให้เปิดแท็บใหม่เพื่อตรวจสอบผลการตอบกลับ
-      >
-        <input type="hidden" name="username" value={username} />
-      </form>
     </div>
   );
 }
