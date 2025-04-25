@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Login Net Akat",
+  title: "เข้าสู่ระบบ"
 };
 
 export default function RootLayout({ children }) {
