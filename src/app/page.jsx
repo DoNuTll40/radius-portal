@@ -12,12 +12,15 @@ export default function LoginPage() {
     const params = new URLSearchParams(window.location.search);
     const m = params.get("magic");
     const e = params.get("Auth");
+
     if (m) {
-      setMagic(m)
-      localStorage.setItem("m");
+      setMagic(m);
+      localStorage.setItem("m", m); // ✅ แก้ตรงนี้
     } else {
-      setMagic(localStorage.getItem("m"))
+      const storedMagic = localStorage.getItem("m");
+      if (storedMagic) setMagic(storedMagic);
     }
+
     if (e) setError(e);
   }, []);
 
@@ -27,16 +30,16 @@ export default function LoginPage() {
         <div className="max-w-[150px] mx-auto">
           <img src="/images/logo/moph-logo.png" alt="moph-logo" />
         </div>
-        <h1 className="text-2xl font-bold mb-4 text-center mt-3">
+        <h1 className="text-2xl font-bold mb-2 text-center mt-3">
           เข้าสู่ระบบอินเทอร์เน็ต
         </h1>
-        <p className="my-2">
-          กรุณาเข้าสู่ระบบเพื่อใช้งานอินเทอร์เน็ตของโรงพยาบาล
+        <p className="text-center text-sm text-gray-600 mb-4">
+          กรุณาเข้าสู่ระบบเพื่อใช้งานอินเทอร์เน็ตของโรงพยาบาลอากาศอำนวย
         </p>
 
         {error && (
-          <p className="text-md my-2 text-red-600 font-black">
-            ข้อผิดพลาด {error && "ชื่อผู้หรือรหัสผ่านไม่ถูกต้อง!"}
+          <p className="text-md my-2 text-red-600 font-black text-center">
+            ข้อผิดพลาด: ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง!
           </p>
         )}
 
@@ -46,18 +49,17 @@ export default function LoginPage() {
 
           <input
             className="w-full p-2 border rounded mb-3"
-            placeholder="Username"
+            placeholder="ชื่อผู้ใช้"
             name="username"
             onChange={(e) => setUsername(e.target.value)}
             value={username}
             required
           />
 
-          {/* ส่ง password */}
           <input
             className="w-full p-2 border rounded mb-4"
             type="password"
-            placeholder="Password"
+            placeholder="รหัสผ่าน"
             name="password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
@@ -66,13 +68,13 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition duration-200"
           >
             เข้าสู่ระบบ
           </button>
 
           <div className="w-full flex justify-center">
-            <p className="text-sm mt-5">v 0.0.003</p>
+            <p className="text-sm mt-5 text-gray-400">v 0.0.01</p>
           </div>
         </form>
       </div>
