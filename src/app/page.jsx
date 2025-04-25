@@ -12,7 +12,12 @@ export default function LoginPage() {
     const params = new URLSearchParams(window.location.search);
     const m = params.get("magic");
     const e = params.get("Auth");
-    if (m) setMagic(m);
+    if (m) {
+      setMagic(m)
+      localStorage.setItem("m");
+    } else {
+      setMagic(localStorage.getItem("m"))
+    }
     if (e) setError(e);
   }, []);
 
