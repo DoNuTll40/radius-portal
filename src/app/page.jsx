@@ -43,7 +43,7 @@ export default function LoginPage() {
           </p>
         )}
 
-        <form method="POST" action={`http://192.168.106.1:1000/fgtauth`}>
+        <form method="POST" action={`http://192.168.25.1:1000/fgtauth`}>
           <input type="hidden" name="magic" value={magic} />
           <input type="hidden" name="4Tredir" value="http://www.akathospital.com" />
 
@@ -72,6 +72,12 @@ export default function LoginPage() {
           >
             เข้าสู่ระบบ
           </button>
+
+          <a
+            href={`https://uat-provider.id.th/oauth/redirect?client_id=9cdb01a8-c108-4a87-90bf-af6206aa1e0d&redirect_uri=http://localhost:3000/callback&response_type=code&state=123`}
+          >
+            เข้าสู่ระบบด้วย Health ID
+          </a>
 
           <div className="w-full flex justify-center">
             <p className="text-sm mt-5 text-gray-400">v 0.0.01</p>
