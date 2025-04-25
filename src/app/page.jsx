@@ -45,7 +45,7 @@ export default function LoginPage() {
 
         <form method="POST" action={`http://192.168.106.1:1000/fgtauth`}>
           <input type="hidden" name="magic" value={magic} />
-          <input type="hidden" name="4Tredir" value="www.akathospital.com" />
+          <input type="hidden" name="4Tredir" value="http://www.akathospital.com" />
 
           <input
             className="w-full p-2 border rounded mb-3"
