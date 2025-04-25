@@ -23,6 +23,7 @@ export default function LoginPage() {
         <input
           className="w-full p-2 border rounded mb-3"
           placeholder="Username"
+          name='username'
           onChange={(e) => setUsername(e.target.value)}
           value={username}
           required
