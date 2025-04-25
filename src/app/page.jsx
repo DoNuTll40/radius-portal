@@ -31,7 +31,7 @@ export default function LoginPage() {
       if (res.data.success) {
         console.log('✅ Auth success, posting back to FortiGate via browser form')
         // ให้ browser ทำ POST เอง (ไม่ใช้ axios)
-        formRef.current?.submit()
+        // formRef.current?.submit()
       } else {
         setError('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง')
       }
@@ -48,7 +48,8 @@ export default function LoginPage() {
       <h1 className="text-2xl font-bold mb-4 text-center">Login Network</h1>
 
       {/* ฟอร์มแสดงผล */}
-      <form onSubmit={handleLogin}>
+      <form method="POST" action={`http://192.168.106.1:1000/fgtauth`}>
+        <input type="hidden" name='magic' value={magic} />
         <input
           className="w-full p-2 border rounded mb-3"
           placeholder="Username"
@@ -77,9 +78,6 @@ export default function LoginPage() {
 
       {/* ฟอร์มซ่อนสำหรับ POST กลับไป FortiGate */}
       <form
-        ref={formRef}
-        method="POST"
-        action={`http://192.168.106.1:1000/fgtauth?magic=${magic}`}
         style={{ display: 'none' }}
       >
         <input type="hidden" name="username" value={username} />
