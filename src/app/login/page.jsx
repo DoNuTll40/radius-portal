@@ -39,7 +39,7 @@ export default function LoginPage() {
         type="password"
         placeholder="Password"
         className="w-full p-2 border mb-4 rounded"
-        disabled
+        required
       />
 
       <button
