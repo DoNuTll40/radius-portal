@@ -1,7 +1,7 @@
 'use client'
 
+import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
-import { useState, useEffect } from 'react'
 
 export default function LoginPage() {
   const [magic, setMagic] = useState('')
@@ -9,8 +9,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const formRef = useRef(null)
 
-  // ดึง magic จาก URL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const m = params.get('magic')
@@ -19,35 +19,19 @@ export default function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault()
-    setLoading(true)
     setError('')
+    setLoading(true)
 
     try {
-      // เรียก API backend เพื่อตรวจสอบกับ RADIUS
       const res = await axios.post('http://10.10.10.3:2545/api/login', {
         username,
         password,
       })
 
-      const data = res.data
-      if (data.success) {
-        console.log('✅ Login success, redirecting to FortiGate with magic')
-
-        const formData = new URLSearchParams()
-        formData.append('username', username)
-
-        // ส่งกลับ FortiGate ผ่านพอร์ต 1000 พร้อม magic
-        await axios.post(
-          `http://192.168.106.1:1000/fgtauth?magic=${magic}`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          }
-        )
-
-        // optional: อาจ redirect ไปหน้า success ของเราเอง หรือแสดงข้อความเฉยๆ ก็ได้
+      if (res.data.success) {
+        console.log('✅ Auth success, posting back to FortiGate via browser form')
+        // ให้ browser ทำ POST เอง (ไม่ใช้ axios)
+        formRef.current?.submit()
       } else {
         setError('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง')
       }
@@ -63,6 +47,7 @@ export default function LoginPage() {
     <div className="p-8 max-w-md mx-auto bg-white rounded shadow">
       <h1 className="text-2xl font-bold mb-4 text-center">Login Network</h1>
 
+      {/* ฟอร์มแสดงผล */}
       <form onSubmit={handleLogin}>
         <input
           className="w-full p-2 border rounded mb-3"
@@ -72,7 +57,6 @@ export default function LoginPage() {
           disabled={loading}
           required
         />
-
         <input
           className="w-full p-2 border rounded mb-4"
           type="password"
@@ -82,7 +66,6 @@ export default function LoginPage() {
           disabled={loading}
           required
         />
-
         <button
           type="submit"
           className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
@@ -90,6 +73,16 @@ export default function LoginPage() {
         >
           {loading ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ'}
         </button>
+      </form>
+
+      {/* ฟอร์มซ่อนสำหรับ POST กลับไป FortiGate */}
+      <form
+        ref={formRef}
+        method="POST"
+        action={`http://192.168.106.1:1000/fgtauth?magic=${magic}`}
+        style={{ display: 'none' }}
+      >
+        <input type="hidden" name="username" value={username} />
       </form>
 
       {error && <p className="text-red-600 mt-3 text-center">{error}</p>}
