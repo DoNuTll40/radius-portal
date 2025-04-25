@@ -2,9 +2,7 @@
 import { useEffect, useState } from "react"
 
 export default function LoginPage() {
-  const [magic, setMagic] = useState("")
   const [postUrl, setPostUrl] = useState("")
-  const [username, setUsername] = useState("")
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -12,7 +10,6 @@ export default function LoginPage() {
     const postParam = params.get("post")
 
     if (magicParam && postParam) {
-      setMagic(magicParam)
       setPostUrl(`${postParam}?${magicParam}`)
     }
   }, [])
@@ -30,13 +27,13 @@ export default function LoginPage() {
         name="username"
         placeholder="Username"
         className="w-full p-2 border mb-4 rounded"
-        onChange={(e) => setUsername(e.target.value)}
         required
       />
 
       {/* password จะไม่ถูกใช้งานโดย FortiGate แต่ใส่ไว้ให้ผู้ใช้รู้สึกปกติ */}
       <input
         type="password"
+        name="password"
         placeholder="Password"
         className="w-full p-2 border mb-4 rounded"
         required
