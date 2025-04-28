@@ -46,7 +46,7 @@ export default function LoginPage() {
 
   if (netSuccess) {
     return <div className="h-dvh w-dvw flex justify-center items-center">
-      <p>คุณเชื่อมต่ออินเทอร์เน็ตแล้ว</p>
+      <p className="font-itim text-xl md:text-3xl">คุณเชื่อมต่ออินเทอร์เน็ตแล้ว</p>
     </div>;
   }
 
