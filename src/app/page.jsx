@@ -12,20 +12,22 @@ export default function LoginPage() {
     const params = new URLSearchParams(window.location.search);
     const m = params.get("magic");
     const e = params.get("Auth");
-
+  
     if (e === "failed") {
       alert("Login ผิด กรุณารอสักครู่ กำลังรีเซ็ตการเชื่อมต่อ...");
-      window.location.href = "http://www.gstatic.com/generate_204";
+      setTimeout(() => {
+        window.location.href = "http://www.gstatic.com/generate_204";
+      }, 1500);
     }
-
+  
     if (m) {
       setMagic(m);
-      localStorage.setItem("m", m); // ✅ แก้ตรงนี้
+      localStorage.setItem("m", m);
     } else {
       const storedMagic = localStorage.getItem("m");
       if (storedMagic) setMagic(storedMagic);
     }
-
+  
     if (e) setError(e);
   }, []);
 
