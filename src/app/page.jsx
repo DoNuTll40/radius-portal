@@ -51,7 +51,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="p-8 w-dvw h-dvh mx-auto bg-white rounded shadow">
+    <div className="p-8 w-dvw h-dvh mx-auto bg-white rounded shadow font-itim">
       <div className="max-w-md mx-auto">
         <div className="max-w-[150px] mx-auto">
           <img src="/images/logo/moph-logo.png" alt="moph-logo" />
