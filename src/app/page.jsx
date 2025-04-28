@@ -13,7 +13,7 @@ export default function LoginPage() {
     const m = params.get("magic");
     const e = params.get("Auth");
   
-    if (e === "failed") {
+    if (e) {
       alert("Login ผิด กรุณารอสักครู่ กำลังรีเซ็ตการเชื่อมต่อ...");
       setTimeout(() => {
         window.location.href = "http://www.gstatic.com/generate_204";
