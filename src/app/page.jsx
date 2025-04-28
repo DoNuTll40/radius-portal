@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "axios";
 import { useState, useEffect } from "react";
 
 export default function LoginPage() {
@@ -24,6 +25,27 @@ export default function LoginPage() {
     if (e) setError(e);
   }, []);
 
+  const hdlSubmit = async (e) => {
+    e.preventDefault(); // ป้องกันการ submit ฟอร์มแบบ default
+    
+    try {
+      const formData = new FormData();
+      formData.append("4Tredir", "http://www.akathospital.com");
+      formData.append("magic", magic);
+      formData.append("username", username);
+      formData.append("password", password);
+
+      const rs = await axios.post("http://192.168.25.1:1000/fgtauth", formData, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+
+      console.log(rs.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
     <div className="p-8 w-dvw h-dvh mx-auto bg-white rounded shadow">
       <div className="max-w-md mx-auto">
@@ -43,9 +65,9 @@ export default function LoginPage() {
           </p>
         )}
 
-        <form method="POST" action={`http://192.168.25.1:1000/fgtauth`}>
-          <input type="hidden" name="magic" value={magic} />
+        <form method="POST" onSubmit={hdlSubmit}>
           <input type="hidden" name="4Tredir" value="http://www.akathospital.com" />
+          <input type="hidden" name="magic" value={magic} />
 
           <input
             className="w-full p-2 border rounded mb-3"
