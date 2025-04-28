@@ -1,25 +1,25 @@
 "use client";
 
+import axios from "axios";
 import { useState, useEffect } from "react";
 
 export default function LoginPage() {
   const [magic, setMagic] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [netSuccess, setNetSuccess] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const m = params.get("magic");
     const e = params.get("Auth");
-  
+
     if (e) {
       alert("Login ผิด กรุณารอสักครู่ กำลังรีเซ็ตการเชื่อมต่อ...");
-      setTimeout(() => {
-        window.location.href = "http://www.gstatic.com/generate_204";
-      }, 1500);
+      window.location.href = "http://www.gstatic.com/generate_204";
     }
-  
+
     if (m) {
       setMagic(m);
       localStorage.setItem("m", m);
@@ -27,9 +27,28 @@ export default function LoginPage() {
       const storedMagic = localStorage.getItem("m");
       if (storedMagic) setMagic(storedMagic);
     }
-  
+
     if (e) setError(e);
+
+    checkNet();
   }, []);
+
+  const checkNet = async () => {
+    try {
+      const rs = await axios.get("https://ipapi.co/json/");
+      if (rs.status === 200) {
+        setNetSuccess(true);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  if (netSuccess) {
+    return <div className="h-dvh w-dvw flex justify-center items-center">
+      <p>คุณเชื่อมต่ออินเทอร์เน็ตแล้ว</p>
+    </div>;
+  }
 
   return (
     <div className="p-8 w-dvw h-dvh mx-auto bg-white rounded shadow">
@@ -51,7 +70,11 @@ export default function LoginPage() {
         )}
 
         <form method="POST" action={`http://192.168.25.1:1000/fgtauth`}>
-          <input type="hidden" name="4Tredir" value="http://www.akathospital.com" />
+          <input
+            type="hidden"
+            name="4Tredir"
+            value="http://www.akathospital.com"
+          />
           <input type="hidden" name="magic" value={magic} />
 
           <input
