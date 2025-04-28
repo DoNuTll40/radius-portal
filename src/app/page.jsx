@@ -13,6 +13,11 @@ export default function LoginPage() {
     const m = params.get("magic");
     const e = params.get("Auth");
 
+    if (e === "failed") {
+      alert("Login ผิด กรุณารอสักครู่ กำลังรีเซ็ตการเชื่อมต่อ...");
+      window.location.href = "http://www.gstatic.com/generate_204";
+    }
+
     if (m) {
       setMagic(m);
       localStorage.setItem("m", m); // ✅ แก้ตรงนี้
@@ -74,7 +79,7 @@ export default function LoginPage() {
           </button>
 
           <a
-            href={`https://uat-provider.id.th/oauth/redirect?client_id=9cdb01a8-c108-4a87-90bf-af6206aa1e0d&redirect_uri=http://localhost:3000/callback&response_type=code&state=123`}
+            href={`https://uat-provider.id.th/oauth/redirect?client_id=9cdb01a8-c108-4a87-90bf-af6206aa1e0d&redirect_uri=http://10.10.10.3:5102/callback&response_type=code&state=123`}
           >
             เข้าสู่ระบบด้วย Health ID
           </a>
