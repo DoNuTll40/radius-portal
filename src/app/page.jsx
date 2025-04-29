@@ -66,7 +66,7 @@ export default function LoginPage() {
         setNetSuccess(true);
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -80,6 +80,7 @@ export default function LoginPage() {
       }
     } catch (err) {
       console.error(err)
+      setError(err?.response?.data?.message)
     }
   }
 
@@ -104,9 +105,11 @@ export default function LoginPage() {
         </p>
 
         {error && (
-          <p className="text-md my-2 text-red-600 font-black text-center">
-            ข้อผิดพลาด: ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง!
-          </p>
+          <div className="bg-red-600 mt-2 mb-4">
+            <p className="text-sm md:text-base ml-2 px-2 bg-red-100 py-2 text-red-600 font-black">
+              ข้อผิดพลาด : {error}!
+            </p>
+          </div>
         )}
 
         <form onSubmit={onSubmit}>
@@ -135,7 +138,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full font-semibold relative overflow-hidden bg-blue-800 hover:outline-2 focus:outline-2 outline-blue-800 hover:outline-green-800 focus:outline-green-800  outline-offset-2 text-white py-2 rounded-full hover:bg-green-800 transition-colors duration-300 hover:cursor-pointer"
+            className="w-full font-semibold relative overflow-hidden bg-blue-800 hover:outline-2 focus:outline-2 outline-blue-800 hover:outline-green-800 hover:focus:outline-green-800  outline-offset-2 text-white py-2 rounded-full hover:bg-green-800 transition-colors duration-300 hover:cursor-pointer"
             onMouseUp={(e) => ripple.create(e, 'light')}
           >
             เข้าสู่ระบบ
