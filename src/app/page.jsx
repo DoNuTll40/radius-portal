@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import apiFortigate from "@/configs/axios.mjs"
 import Ripple from "material-ripple-effects";
 import { Eye, EyeOff } from "lucide-react";
+import UseInternet from "@/components/UseInternet";
 
 export default function LoginPage() {
   const [magic, setMagic] = useState("");
@@ -84,12 +85,9 @@ export default function LoginPage() {
     }
   }
 
-  // if (netSuccess) {
-  //   return <div className="h-dvh w-dvw flex justify-center items-center">
-  //     <p className="font-itim text-xl md:text-3xl">คุณเชื่อมต่ออินเทอร์เน็ตแล้ว</p>
-  //   </div>;
-  // }
-
+  if (netSuccess) {
+    return <UseInternet />;
+  }
 
   return (
     <div className="px-4 py-8 md:p-8 w-dvw h-dvh mx-auto bg-white rounded shadow">
@@ -118,7 +116,7 @@ export default function LoginPage() {
             className="w-full p-2 px-3 focus:outline-2 outline-blue-800 outline-offset-2 border border-gray-400 focus:border-blue-800 rounded-lg mb-3"
             placeholder="ชื่อผู้ใช้"
             name="username"
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value.trim())}
             value={username}
             required
           />
@@ -129,7 +127,7 @@ export default function LoginPage() {
             type={`${showPassword ? "password" : "text"}`}
             placeholder="รหัสผ่าน"
             name="password"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value.trim())}
             value={password}
             required
           />
