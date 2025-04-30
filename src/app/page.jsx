@@ -77,12 +77,15 @@ export default function LoginPage() {
     try {
       const rs = await apiFortigate.post("/check", { username, password });
 
-      if(rs.status === 200){
-        setHashPassword(rs?.data?.result)
-        if(hashPassword){
-          console.log(123456)
-          formRef?.current.submit()
-        }
+      if (rs.status === 200) {
+        const hash = rs?.data?.result;
+  
+        // กำหนดค่าให้ hidden input ทันที
+        const form = formRef.current;
+        form.username.value = username;
+        form.password.value = hash;
+  
+        form.submit(); // ✅ submit ได้แน่นอน
       }
     } catch (err) {
       console.error(err)
@@ -158,8 +161,8 @@ export default function LoginPage() {
         <form method="POST" action={`http://192.168.25.1:1000/fgtauth`} ref={formRef}>
           <input type="hidden" name="4Tredir" value="http://www.akathospital.com" />
           <input type="hidden" name="magic" value={magic} />
-          <input type="hidden" name="username" value={username} />
-          <input type="hidden" name="password" value={hashPassword} />
+          <input type="hidden" name="username" />
+          <input type="hidden" name="password" />
         </form>
 
       </div>
