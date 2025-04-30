@@ -32,7 +32,7 @@ export default function LoginPage() {
 
     setVlan(p.split(".")[2])
 
-    window.location.href = "http://www.gstatic.com/generate_204";
+    // window.location.href = "http://www.gstatic.com/generate_204";
 
     if (e) {
       toast.error("Login ผิด กรุณารอสักครู่ กำลังรีเซ็ตการเชื่อมต่อ...");
