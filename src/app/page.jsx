@@ -195,7 +195,7 @@ export default function LoginPage() {
 
         <form
           method="POST"
-          action={`http://192.168.25.1:1000/fgtauth`}
+          action={`http://192.168.100.1:1000/fgtauth`}
           ref={formRef}
         >
           <input
