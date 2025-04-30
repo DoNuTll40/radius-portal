@@ -17,6 +17,7 @@ export default function LoginPage() {
   const [netSuccess, setNetSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(true);
+  const [vlan, setVlan] = useState()
 
   const ripple = new Ripple();
 
@@ -27,6 +28,11 @@ export default function LoginPage() {
     const params = new URLSearchParams(window.location.search);
     const m = params.get("magic");
     const e = params.get("Auth");
+    const p = params.get("post");
+
+    setVlan(p.split(".")[2])
+
+    window.location.href = "http://www.gstatic.com/generate_204";
 
     if (e) {
       toast.error("Login ผิด กรุณารอสักครู่ กำลังรีเซ็ตการเชื่อมต่อ...");
@@ -97,9 +103,9 @@ export default function LoginPage() {
     }
   };
 
-  // if (netSuccess) {
-  //   return <UseInternet />;
-  // }
+  if (netSuccess) {
+    return <UseInternet />;
+  }
 
   return (
     <div className="px-4 py-8 md:p-8 w-dvw h-dvh mx-auto bg-white rounded shadow">
@@ -195,7 +201,7 @@ export default function LoginPage() {
 
         <form
           method="POST"
-          action={`http://192.168.100.1:1000/fgtauth`}
+          action={`http://192.168.${vlan}.1:1000/fgtauth`}
           ref={formRef}
         >
           <input
@@ -207,6 +213,7 @@ export default function LoginPage() {
           <input type="hidden" name="username" />
           <input type="hidden" name="password" />
         </form>
+
       </div>
     </div>
   );

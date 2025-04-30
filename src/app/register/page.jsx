@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Ripple from "material-ripple-effects";
-import { useRouter } from "next/navigation";
 import axios from "@/configs/axios.mjs";
 import Footer from "@/components/Footer";
 import { toast } from "react-toastify";
@@ -17,7 +16,6 @@ export default function page() {
   const [error, setError] = useState(null);
 
   const ripple = new Ripple();
-  const router = useRouter();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -87,7 +85,7 @@ export default function page() {
           />
 
           <p className="text-xxs text-center mb-1 text-red-600 font-semibold">
-            * รหัสผ่านจะต้องประกอบไปด้วยตัวอักษรพิมพ์ใหญ่ ตัวเลข และอักษรพิเศษ
+            * รหัสผ่านจะต้องประกอบไปด้วยตัวอักษร, ตัวเลข และอักษรพิเศษ
             เช่น @ * / ' " เป็นต้น
           </p>
 
