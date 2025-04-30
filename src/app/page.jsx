@@ -14,6 +14,7 @@ export default function LoginPage() {
   const [netSuccess, setNetSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(true);
+  const [hashPassword, setHashPassword] = useState(null);
 
   const ripple = new Ripple();
 
@@ -77,6 +78,7 @@ export default function LoginPage() {
       const rs = await apiFortigate.post("/check", { username, password });
 
       if(rs.status === 200){
+        setHashPassword(rs?.data?.result)
         formRef?.current.submit()
       }
     } catch (err) {
@@ -154,7 +156,7 @@ export default function LoginPage() {
           <input type="hidden" name="4Tredir" value="http://www.akathospital.com" />
           <input type="hidden" name="magic" value={magic} />
           <input type="hidden" name="username" value={username} />
-          <input type="hidden" name="password" value={password} />
+          <input type="hidden" name="password" value={hashPassword} />
         </form>
 
       </div>
