@@ -37,7 +37,7 @@ export default function page() {
       const rs = await axios.post("/register", { username, password });
       if (rs.status === 200) {
         toast.success("สร้างผู้ใช้งานเรียบร้อยแล้ว!");
-        router.push("/");
+        window.location.href = "http://www.gstatic.com/generate_204"
       }
     } catch (err) {
       console.log(err);
@@ -162,7 +162,7 @@ export default function page() {
               type="button"
               className="w-full font-semibold relative overflow-hidden bg-blue-100 text-blue-800 border border-blue-800 hover:outline-2 focus:outline-2 outline-blue-800 hover:outline-blue-800 hover:focus:outline-blue-800  outline-offset-2 py-2 rounded-full hover:bg-blue-200 transition-colors duration-300 hover:cursor-pointer"
               onMouseUp={(e) => ripple.create(e, "light")}
-              onClick={() => router.push("/")}
+              onClick={() => window.location.href = "http://www.gstatic.com/generate_204"}
             >
               เข้าสู่ระบบ
             </button>
