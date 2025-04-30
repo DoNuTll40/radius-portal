@@ -83,7 +83,7 @@ export default function LoginPage() {
         // กำหนดค่าให้ hidden input ทันที
         const form = formRef.current;
         form.username.value = username;
-        form.password.value = hash;
+        form.password.value = password;
   
         form.submit(); // ✅ submit ได้แน่นอน
       }
@@ -153,7 +153,7 @@ export default function LoginPage() {
           <hr className="my-6 text-gray-300 mx-6" />
 
           <div className="select-none w-full flex flex-col gap-1 justify-center items-center text-xxs text-gray-700">
-            <p className="font-bold">Captive Protal v0.1.0</p>
+            <p className="font-bold">Captive Protal v0.5.0</p>
             <p>&copy; Copyright 2025 พัฒนาโดยกลุ่มงานสุขภาพดิจิทัล โรงพยาบาลอากาศอำนวย</p>
           </div>
         </form>
