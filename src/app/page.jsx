@@ -62,13 +62,6 @@ export default function LoginPage() {
     };
   }, []);
 
-  useEffect(() => {
-    // ถ้าไม่มี magic และยังไม่เชื่อมต่อเน็ต → redirect เพื่อสร้าง magic
-    if (!magic && netSuccess === false) {
-      window.location.href = "http://www.gstatic.com/generate_204";
-    }
-  }, []);
-
   const checkNet = async () => {
     try {
       const rs = await axios.get("https://ipapi.co/json/");
@@ -102,9 +95,9 @@ export default function LoginPage() {
     }
   };
 
-  if (netSuccess) {
-    return <UseInternet />;
-  }
+  // if (netSuccess) {
+  //   return <UseInternet />;
+  // }
 
   return (
     <div className="px-4 py-8 md:p-8 w-dvw h-dvh mx-auto bg-white rounded shadow">
