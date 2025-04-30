@@ -67,7 +67,7 @@ export default function LoginPage() {
     if (!magic && netSuccess === false) {
       window.location.href = "http://www.gstatic.com/generate_204";
     }
-  }, [magic, netSuccess]);
+  }, []);
 
   const checkNet = async () => {
     try {
