@@ -83,7 +83,7 @@ export default function LoginPage() {
         // กำหนดค่าให้ hidden input ทันที
         const form = formRef.current;
         form.username.value = username;
-        form.password.value = password;
+        form.password.value = hash;
   
         form.submit(); // ✅ submit ได้แน่นอน
       }
