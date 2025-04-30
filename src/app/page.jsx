@@ -79,7 +79,10 @@ export default function LoginPage() {
 
       if(rs.status === 200){
         setHashPassword(rs?.data?.result)
-        formRef?.current.submit()
+        if(hashPassword){
+          console.log(123456)
+          formRef?.current.submit()
+        }
       }
     } catch (err) {
       console.error(err)
