@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "aos": "^3.0.0-beta.6",
     "axios": "^1.8.4",
     "bcryptjs": "^3.0.2",
     "dgram": "^1.0.1",
@@ -20,7 +21,8 @@
     "path": "^0.12.7",
     "radius": "^1.1.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

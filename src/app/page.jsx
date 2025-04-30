@@ -2,10 +2,13 @@
 
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
-import apiFortigate from "@/configs/axios.mjs"
+import apiFortigate from "@/configs/axios.mjs";
 import Ripple from "material-ripple-effects";
 import { Eye, EyeOff } from "lucide-react";
 import UseInternet from "@/components/UseInternet";
+import { useRouter } from "next/navigation";
+import Footer from "@/components/Footer";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const [magic, setMagic] = useState("");
@@ -14,10 +17,10 @@ export default function LoginPage() {
   const [netSuccess, setNetSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(true);
-  const [hashPassword, setHashPassword] = useState(null);
 
   const ripple = new Ripple();
 
+  const router = useRouter();
   const formRef = useRef();
 
   useEffect(() => {
@@ -26,7 +29,7 @@ export default function LoginPage() {
     const e = params.get("Auth");
 
     if (e) {
-      alert("Login ผิด กรุณารอสักครู่ กำลังรีเซ็ตการเชื่อมต่อ...");
+      toast.error("Login ผิด กรุณารอสักครู่ กำลังรีเซ็ตการเชื่อมต่อ...");
       window.location.href = "http://www.gstatic.com/generate_204";
     }
 
@@ -38,7 +41,7 @@ export default function LoginPage() {
       if (storedMagic) setMagic(storedMagic);
     }
 
-    if (e) setError(e);
+    if (e) toast.error(e);
 
     checkNet();
 
@@ -47,7 +50,7 @@ export default function LoginPage() {
 
     const timerId = setTimeout(() => {
       // เมื่อครบ 5 นาที ให้แสดง alert
-      alert("หมดเวลาเข้าสู่ระบบ โปรดลองใหม่");
+      toast.error("หมดเวลาเข้าสู่ระบบ โปรดลองใหม่");
       // คุณอาจจะต้องการเพิ่มโค้ดอื่นๆ ตรงนี้ เช่น รีโหลดหน้าเว็บ
       window.location.href = "http://www.gstatic.com/generate_204";
     }, timeoutDuration);
@@ -73,29 +76,30 @@ export default function LoginPage() {
   };
 
   const onSubmit = async (e) => {
+    setError(null)
     e.preventDefault();
     try {
       const rs = await apiFortigate.post("/check", { username, password });
 
       if (rs.status === 200) {
         const hash = rs?.data?.result;
-  
-        // กำหนดค่าให้ hidden input ทันที
+
         const form = formRef.current;
         form.username.value = username;
         form.password.value = hash;
-  
-        form.submit(); // ✅ submit ได้แน่นอน
+
+        form.submit();
+        toast.success("เข้าสู่ระบบสำเร็จ!")
       }
     } catch (err) {
-      console.error(err)
-      setError(err?.response?.data?.message)
+      console.error(err);
+      toast.error(err?.response?.data?.message);
     }
-  }
+  };
 
-  if (netSuccess) {
-    return <UseInternet />;
-  }
+  // if (netSuccess) {
+  //   return <UseInternet />;
+  // }
 
   return (
     <div className="px-4 py-8 md:p-8 w-dvw h-dvh mx-auto bg-white rounded shadow">
@@ -113,58 +117,96 @@ export default function LoginPage() {
         {error && (
           <div className="bg-red-600 mt-2 mb-4">
             <p className="text-sm md:text-base ml-2 px-2 bg-red-100 py-2 text-red-600 font-black">
-              ข้อผิดพลาด : {error}!
+              ข้อผิดพลาด : {error}
             </p>
           </div>
         )}
 
         <form onSubmit={onSubmit}>
-
           <input
+            type="tel"
+            inputMode="numeric"
+            pattern="[0-9]*"
             className="w-full p-2 px-3 focus:outline-2 outline-blue-800 outline-offset-2 border border-gray-400 focus:border-blue-800 rounded-lg mb-3"
-            placeholder="ชื่อผู้ใช้"
+            placeholder="หมายเลขบัตรประชาชน"
             name="username"
-            onChange={(e) => setUsername(e.target.value.trim())}
+            onChange={(e) => {
+              setError(null)
+              const onlyNums = e.target.value.replace(/[^0-9]/g, "");
+              setUsername(onlyNums);
+            }}
             value={username}
+            maxLength="13"
+            minLength="13"
             required
           />
 
           <div className="relative select-none">
-          <input
-            className="w-full p-2 pl-3 pr-10 focus:outline-2 outline-blue-800 outline-offset-2 border border-gray-400 focus:border-blue-800 rounded-lg mb-4"
-            type={`${showPassword ? "password" : "text"}`}
-            placeholder="รหัสผ่าน"
-            name="password"
-            onChange={(e) => setPassword(e.target.value.trim())}
-            value={password}
-            required
-          />
-            {showPassword ? <Eye size={19} className="absolute right-3 top-1/5 text-gray-400 hover:text-gray-700 cursor-pointer" onClick={ () => setShowPassword(false)} /> : <EyeOff size={19} className="absolute right-3 top-1/5 text-gray-400 hover:text-gray-700 cursor-pointer" onClick={ () => setShowPassword(true)} />}
+            <input
+              className="w-full p-2 pl-3 pr-10 focus:outline-2 outline-blue-800 outline-offset-2 border border-gray-400 focus:border-blue-800 rounded-lg mb-4"
+              type={`${showPassword ? "password" : "text"}`}
+              placeholder="รหัสผ่าน"
+              name="password"
+              onChange={(e) => {
+                setError(null)
+                setPassword(e.target.value.trim())
+              }}
+              value={password}
+              required
+            />
+            {showPassword ? (
+              <Eye
+                size={19}
+                className="absolute right-3 top-1/5 text-gray-400 hover:text-gray-700 cursor-pointer"
+                onClick={() => setShowPassword(false)}
+              />
+            ) : (
+              <EyeOff
+                size={19}
+                className="absolute right-3 top-1/5 text-gray-400 hover:text-gray-700 cursor-pointer"
+                onClick={() => setShowPassword(true)}
+              />
+            )}
           </div>
 
-          <button
-            type="submit"
-            className="w-full font-semibold relative overflow-hidden bg-blue-800 hover:outline-2 focus:outline-2 outline-blue-800 hover:outline-green-800 hover:focus:outline-green-800  outline-offset-2 text-white py-2 rounded-full hover:bg-green-800 transition-colors duration-300 hover:cursor-pointer"
-            onMouseUp={(e) => ripple.create(e, 'light')}
-          >
-            เข้าสู่ระบบ
-          </button>
+          <div className="flex flex-col gap-2">
+            <button
+              type="submit"
+              className="w-full font-semibold relative overflow-hidden bg-blue-800 hover:outline-2 focus:outline-2 outline-blue-800 hover:outline-green-800 hover:focus:outline-green-800  outline-offset-2 text-white py-2 rounded-full hover:bg-green-800 transition-colors duration-300 hover:cursor-pointer"
+              onMouseUp={(e) => ripple.create(e, "light")}
+            >
+              เข้าสู่ระบบ
+            </button>
+
+            <button
+              type="button"
+              className="w-full font-semibold relative overflow-hidden bg-blue-100 text-blue-800 border border-blue-800 hover:outline-2 focus:outline-2 outline-blue-800 hover:outline-blue-800 hover:focus:outline-blue-800  outline-offset-2 py-2 rounded-full hover:bg-blue-200 transition-colors duration-300 hover:cursor-pointer"
+              onMouseUp={(e) => ripple.create(e, "light")}
+              onClick={() => router.push("/register")}
+            >
+              สมัครใช้งาน
+            </button>
+          </div>
 
           <hr className="my-6 text-gray-300 mx-6" />
 
-          <div className="select-none w-full flex flex-col gap-1 justify-center items-center text-xxs text-gray-700">
-            <p className="font-bold">Captive Protal v0.5.0</p>
-            <p>&copy; Copyright 2025 พัฒนาโดยกลุ่มงานสุขภาพดิจิทัล โรงพยาบาลอากาศอำนวย</p>
-          </div>
+          <Footer />
         </form>
 
-        <form method="POST" action={`http://192.168.25.1:1000/fgtauth`} ref={formRef}>
-          <input type="hidden" name="4Tredir" value="http://www.akathospital.com" />
+        <form
+          method="POST"
+          action={`http://192.168.25.1:1000/fgtauth`}
+          ref={formRef}
+        >
+          <input
+            type="hidden"
+            name="4Tredir"
+            value="http://www.akathospital.com"
+          />
           <input type="hidden" name="magic" value={magic} />
           <input type="hidden" name="username" />
           <input type="hidden" name="password" />
         </form>
-
       </div>
     </div>
   );
