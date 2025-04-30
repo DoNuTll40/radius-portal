@@ -9,6 +9,7 @@ import UseInternet from "@/components/UseInternet";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
 import { toast } from "react-toastify";
+import TimeoutModal from "@/components/TimeoutModal";
 
 export default function LoginPage() {
   const [magic, setMagic] = useState("");
@@ -18,6 +19,7 @@ export default function LoginPage() {
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(true);
   const [vlan, setVlan] = useState()
+  const [showTimeoutModal, setShowTimeoutModal] = useState(false);
 
   const ripple = new Ripple();
 
@@ -30,9 +32,8 @@ export default function LoginPage() {
     const e = params.get("Auth");
     const p = params.get("post");
 
-    setVlan(p.split(".")[2])
-
-    // window.location.href = "http://www.gstatic.com/generate_204";
+    const ipParts = p?.split(".");
+    if (ipParts?.length === 4) setVlan(ipParts[2]);
 
     if (e) {
       toast.error("Login ผิด กรุณารอสักครู่ กำลังรีเซ็ตการเชื่อมต่อ...");
@@ -51,24 +52,22 @@ export default function LoginPage() {
 
     checkNet();
 
-    // --- เพิ่มส่วนตั้งเวลา ---
-    const timeoutDuration = 5 * 60 * 1000; // 5 นาที (แปลงเป็นมิลลิวินาที)
-
+    const timeoutDuration = 5 * 60 * 1000;
     const timerId = setTimeout(() => {
-      // เมื่อครบ 5 นาที ให้แสดง alert
-      toast.error("หมดเวลาเข้าสู่ระบบ โปรดลองใหม่");
-      // คุณอาจจะต้องการเพิ่มโค้ดอื่นๆ ตรงนี้ เช่น รีโหลดหน้าเว็บ
-      window.location.href = "http://www.gstatic.com/generate_204";
+      setShowTimeoutModal(true);
     }, timeoutDuration);
-    // --- สิ้นสุดส่วนตั้งเวลา ---
 
-    // --- ฟังก์ชัน Cleanup ---
-    // ฟังก์ชันนี้จะทำงานเมื่อ component ถูก unmount (ออกจากหน้า)
-    // เพื่อยกเลิก timer ป้องกัน alert แสดงขึ้นมาหลังจากเปลี่ยนหน้าไปแล้ว
     return () => {
       clearTimeout(timerId);
     };
   }, []);
+
+  useEffect(() => {
+    // ถ้าไม่มี magic และยังไม่เชื่อมต่อเน็ต → redirect เพื่อสร้าง magic
+    if (!magic && netSuccess === false) {
+      window.location.href = "http://www.gstatic.com/generate_204";
+    }
+  }, [magic, netSuccess]);
 
   const checkNet = async () => {
     try {
@@ -109,6 +108,9 @@ export default function LoginPage() {
 
   return (
     <div className="px-4 py-8 md:p-8 w-dvw h-dvh mx-auto bg-white rounded shadow">
+
+      {showTimeoutModal && <TimeoutModal />}
+
       <div className="max-w-md mx-auto">
         <div className="max-w-[140px] mx-auto">
           <img src="/images/logo/moph-logo.png" alt="moph-logo" />
