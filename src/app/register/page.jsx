@@ -46,7 +46,7 @@ export default function page() {
   };
 
   return (
-    <div className="px-4 py-8 md:p-8 w-dvw h-dvh mx-auto bg-white rounded shadow">
+    <div className="px-4 py-8 md:p-8 w-dvw h-dvh mx-auto bg-white">
       <div className="max-w-md mx-auto">
         <div className="max-w-[140px] mx-auto">
           <img src="/images/logo/moph-logo.png" alt="moph-logo" />

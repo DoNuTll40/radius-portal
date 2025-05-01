@@ -95,9 +95,9 @@ export default function LoginPage() {
     }
   };
 
-  // if (netSuccess) {
-  //   return <UseInternet />;
-  // }
+  if (netSuccess) {
+    return <UseInternet />;
+  }
 
   return (
     <div className="px-4 py-8 md:p-8 w-dvw h-dvh mx-auto bg-white rounded shadow">
